@@ -1,0 +1,5 @@
+#/clone/user/user.c
+dbase (["max_qi":100,"qi":100,"registered":3,"per":23,"int":20,"eff_jingli":100,"env":(["wimpy":50,]),"m-card-vip":1,"race":"人类","shen":0,"mud_age":771,"jingli":100,"name":"樗里北山","dex":20,"eff_jing":100,"max_pot":120,"potential":119,"food":158,"channels":({"chat","rumor","party","sj","declare",}),"mud_time":233,"spec":(["vipcard":1,]),"SJ_Credit":1000,"actions":,"id":"lazarusa","str":20,"online_total":771,"jing":100,"title":"普通百姓","gender":"男性","check_point":1470196192,"pur":10,"combat_exp":3020,"kar":14,"max_jing":100,"startroom":"/d/wuguan/dayuan","neili":0,"con":20,"vip":(["vip_start_time":1470195810,"rules":1,"vip_time":1472787810,]),"water":150,"birthday":1470195421,"balance":90,"eff_qi":100,"day":1,"lastroom":"/d/xiangyang/njie3","age":14,])
+skills (["force":2,"club":2,"staff":2,"literate":29,"parry":2,"blade":1,])
+learned (["force":0,"club":4,"staff":2,"parry":6,"blade":2,])
+autoload ({"/clone/money/silver:74","/clone/money/gold:9","/d/wuguan/npc/obj/letter","/clone/money/coin:403",})

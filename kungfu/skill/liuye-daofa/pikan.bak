@@ -1,0 +1,103 @@
+//pikan.c by sohu@xojh
+
+
+#include <ansi.h>
+
+inherit F_SSERVER;
+
+int perform(object me, object target)
+{
+        object weapon;
+		string msg;
+		int p,damage;
+		int ski=me->query_skill("liuye-daofa",1);
+        
+        if( !target ) target = offensive_target(me);
+
+        if( !objectp(target)
+        ||  !target->is_character()
+        ||  !me->is_fighting(target) 
+        || !living(target))
+                return notify_fail("「劈砍诀」只能对战斗中的对手使用。\n");
+
+        if( (int)me->query_skill("liuye-daofa", 1) < 100 )
+                return notify_fail("你的柳叶刀法功力太浅，无法使用「劈砍」攻击。\n");
+
+        if( (int)me->query_skill("tiezhang-zhangfa", 1) < 100 )
+                return notify_fail("你的铁掌掌法功力太浅，无法使用「劈砍」攻击。\n");
+      
+        if( (int)me->query("max_neili") < 1400 )
+                return notify_fail("你的内力太浅，无法使用「劈砍」攻击。\n");
+
+        if( (int)me->query("neili") < 500 )
+                return notify_fail("你的真气不足，无法使用「劈砍」攻击。\n");
+
+        if (!objectp(weapon = me->query_temp("weapon")) || weapon->query("skill_type") != "blade"
+            || me->query_skill_mapped("blade") != "liuye-daofa" 
+			|| me->query_skill_mapped("force") != "guiyuan-tunafa")
+                return notify_fail("你的准备功夫不对。\n");
+
+        message_vision(HIR"$N大喝一声，奋起全身劲气，气势如虹，一刀向$n砍去！\n" NOR,me,target);
+        
+		if (random(me->query_skill("blade",1))>target->query_skill("parry",1)/2
+			||random(me->query_str(1))>target->query_str(1)/2)
+		{
+		
+			damage = me->query_skill("blade",1) * 4;
+			damage += me->query_skill("force",1) * 4;
+			damage = damage + random(damage);
+			if (damage > 3500) damage = 3500+random(damage-3500)/100;
+			
+			target->receive_damage("qi", damage, me);
+			target->receive_wound("qi", damage/3, me);
+			me->add("neili", -100);
+			me->add("jingli", -50);
+
+			msg = RED"$N深悟柳叶刀法的精髓，刀沉力大，$n躲闪不及，被一刀劈中！\n"NOR;
+	
+			if (random(2)) {
+				p = (target->query("eff_qi")+target->query_temp("apply/qi"))*100/(target->query("max_qi")+target->query_temp("apply/qi"));
+				msg += "( $n"+COMBAT_D->eff_status_msg(p)+" )\n";
+			}else {
+				p = target->query("qi")*100/(target->query("max_qi")+target->query_temp("apply/qi"));
+				msg += "( $n"+COMBAT_D->status_msg(p)+" )\n";
+			}
+	   		message_vision(msg, me, target);		
+		}
+		else {
+			msg = CYN"可是$p轻功卓越，当即躲闪一旁。\n"NOR;
+			me->add("neili", -100);
+			message_vision(msg, me, target);
+		}	
+		me->start_busy(1+random(2));
+		me->start_perform(2, "劈砍诀");
+	
+        return 1;
+}
+
+string perform_name(){ return HIR"劈砍诀"NOR; }
+
+int help(object me)
+{
+        write(HIR"\n柳叶刀法之「劈砍」："NOR"\n\n");
+        write(@HELP 
+	柳叶刀法乃是铁掌帮弟子入门的武技，是历代帮主
+	和长老们数年抗敌后总结提炼的一套实用刀法。该
+	刀法简单粗暴，就凭强大的臂力以及沉重的兵器，
+	一刀劈砍下去，往往是对方兵器和人俱亡的结果。
+	
+	指令：perform blade.pikan
+		
+要求：  
+	当前内力 500 以上；
+	最大内力 1400 以上；
+	当前精力 500 以上；
+	铁掌掌法等级 100 以上；
+	柳叶刀法等级 100 以上；
+	基本内功等级 100 以上；
+	激发招架为柳叶刀法；
+	激发内功为归元吐纳法。
+HELP
+        );
+        return 1;
+}

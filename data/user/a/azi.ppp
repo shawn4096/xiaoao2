@@ -1,0 +1,7 @@
+#/clone/user/user.c
+alias (["本次上线时间":"1469970266","淳朴":"23",])
+conditions (["dali_xuncheng2":4,"db_exp":975,"job_busy":2,])
+dbase (["qi":107,"per":17,"wgjob":(["quest":29,]),"eff_jingli":300,"env":(["brief":"YES","brf_go":1,"wimpy":50,"look":"YES",]),"SJ_Credit_Used":50,"shen":0,"max_pot":133,"SJ_Credit":950,"spec":(["last_week":2430,"tianlong":1,]),"str":20,"title":"普通百姓","kar":29,"startroom":"/d/wuguan/dayuan","max_jingli":200,"con":18,"vip":(["vip_start_time":1469970681,"rules":1,"vip_time":1472562681,]),"water":187,"eff_qi":108,"max_qi":201,"registered":3,"int":20,"myjoblist":({"巡城",}),"m-card-vip":1,"race":"人类","mud_age":333,"dex":22,"name":"阿紫儿","jingli":151,"mud_time":98,"channels":({"chat","rumor","party","sj","declare","irc",}),"food":181,"potential":133,"eff_jing":108,"id":"azi","actions":,"jing":107,"online_total":333,"gender":"女性","job_time":(["巡城":2,"大理":2,]),"pur":23,"check_point":1469970989,"combat_exp":3310,"max_jing":150,"neili":168,"birthday":1469970426,"day":0,"max_neili":200,"balance":100000,"age":14,"lastroom":"/d/dali/xijie4",])
+skills (["force":2,"club":3,"hand":3,"parry":2,"literate":30,"blade":2,])
+learned (["force":4,"club":2,"hand":0,"parry":0,"literate":0,"blade":8,])
+autoload ({"/clone/money/coin:62","/d/wuguan/npc/obj/letter","/clone/money/silver:12",})

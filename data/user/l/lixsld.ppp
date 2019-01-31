@@ -1,0 +1,8 @@
+#/clone/user/user.c
+alias (["action":"存钱取钱？",])
+conditions (["dali_xuncheng2":0,"job_busy":1,])
+dbase (["qi":147,"per":13,"wgjob":(["quest":31,]),"eff_jingli":244,"env":(["brief":1,"brf_go":1,"wimpy":100,"wimpycmd":"pfmpfm\\hp","look":1,]),"qn_balance":10200,"SJ_Credit_Used":152,"shen":-37846,"max_pot":189,"spec":(["dahuan":1,"last_week":2430,"tianlong":3,]),"SJ_Credit":907,"str":20,"xionghuangjiu":1,"title":"神龙教第三代弟子","jiali":9,"kar":20,"startroom":"/d/city/kedian","max_jingli":144,"con":15,"vip":(["vip_start_time":1469940894,"rules":1,"vip_time":1472532894,]),"water":130,"eff_qi":193,"max_qi":193,"job_last_gift":(["巡城":400,]),"registered":3,"family":(["title":"弟子","master_name":"张淡月","generation":3,"enter_time":1469941448,"privs":0,"family_name":"神龙教","master_id":"zhang danyue",]),"int":30,"month":1,"app":(["sld":1,]),"myjoblist":({"巡城",}),"m-card-vip":1,"race":"人类","mud_age":23497,"dex":15,"name":"小飞燕","jingli":244,"mud_time":7062,"channels":({"chat","rumor","party","sj","declare",}),"food":134,"potential":290,"eff_jing":136,"id":"lixsld","actions":,"online_total":16065,"jing":136,"gender":"女性","job_time":(["巡城":422,"大理":422,]),"pur":30,"check_point":1469970423,"no_robot_check":1,"combat_exp":69596,"max_jing":136,"neili":426,"birthday":1469940038,"day":2,"balance":179700,"max_neili":213,"age":14,"lastroom":"/d/dali/xijie4",])
+skills (["force":1,"club":2,"dulong-dafa":18,"staff":1,"dodge":5,"parry":2,"literate":29,"trade":3,])
+learned (["force":2,"club":8,"dulong-dafa":46,"staff":4,"dodge":10,"parry":5,"trade":15,])
+skill_map (["force":"dulong-dafa",])
+autoload ({"/clone/money/silver:15","/clone/money/coin:80",})

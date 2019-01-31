@@ -1,0 +1,3 @@
+/var/lib/mysql/bbs
+
+myisamchk --recover *.MYI ÐÞ¸´Êý¾Ý¿â

@@ -1,0 +1,305 @@
+// pfm canhe by hongba
+
+#include <ansi.h>
+inherit F_SSERVER;
+#include <combat_msg.h>
+
+int next1(object me, object target, int i);
+int next2(object me, object target, int i);
+
+int perform(object me,object target)
+{
+        object weapon;
+        string msg;
+        int ap,dp;
+		int i = me->query_skill("dugu-jiujian",1) / 6 + me->query_skill("sword",1) /6 + me->query_skill("force",1) /6;
+
+		int lvl = me->query_skill("dugu-jiujian", 1)/6;
+		
+if (i>150) i=150;
+
+		if( !target ) target = offensive_target(me);
+
+        if( !objectp(target)
+         || !me->is_fighting(target) 
+         || !living(target)
+         || environment(target)!=environment(me))
+                return notify_fail("独孤九式只能对战斗中的对手使用。\n");
+
+		if( !me->query("quest/hs/dgjj/jiushi/pass"))
+                return notify_fail("你还未练成此招，不能使用独孤九式！\n");
+
+		if( me->query_skill("force", 1) < 300 )
+                return notify_fail("你的内功还未练成，不能使用独孤九式！\n");
+
+		if( me->query_skill("dugu-jiujian", 1) < 300 )
+                return notify_fail("你的剑法还未练成，不能使用独孤九式！\n");
+
+		if( !me->query_temp("weapon"))
+                        return notify_fail("你手里没有兵器，无法使用独孤九式！\n");
+   
+		if (me->query_skill_mapped("parry") != "dugu-jiujian"
+            || me->query_skill_mapped("sword") != "dugu-jiujian")            
+                return notify_fail("你现在无法使用「独孤九式」进行攻击。\n");  
+
+
+		if(me->query("max_neili") < 15000 )
+                return notify_fail("你的内力修为不够15000，不能使用独孤九式！\n");
+		if(me->query("neili") < 1000 )
+                return notify_fail("你现在真气不足，不能使用独孤九式！\n");
+		if(me->query("jingli") < 600 )
+                return notify_fail("你现在精力不足，不能使用独孤九式！\n");
+		if(me->query_temp("chz/ch"))
+                return notify_fail("你正在使用独孤九式！\n");
+   
+
+		message_vision(HBMAG+HIG"\n$N贯通独孤九式剑招，瞬间招式变缓，天下武学尽皆收至眼底。\n"
+"这「独孤九式」每招都是从败招之中演化而来，所谓败中求胜。\n"NOR, me,target);
+		me->start_perform(4,"「独孤九式」");
+  
+		me->add("neili", -800);
+		me->add("jingli",-500);
+		me->set_temp("dgjs",1);
+		me->add_temp("apply/attack", i);
+		me->add_temp("apply/damage",i);
+    
+		target->set_temp("must_be_hit",1);
+
+		COMBAT_D->do_attack(me, target, me->query_temp("weapon"),random(3)?3:1);
+        target->delete_temp("must_be_hit");
+
+ //1荡剑式
+	if ( me->query_skill("dugu-jiujian", 1) > 300) {
+		if( !me->query_temp("weapon"))return 1;
+		msg = HBRED+HIW"\n「荡剑式」，有进无退,攻敌之不得不守。虽只一剑一式，却是变化无穷。\n"
+			+"$N的剑招突然变得犹如风中柳絮，飘忽不定，$n只觉眼前一花，胸口已被刺中。\n"NOR;
+		message_vision(msg, me, target);
+		me->set_temp("dgjs", 3);
+		me->add_temp("apply/sword", i);
+        me->add_temp("apply/attack", i);
+        me->add_temp("apply/damage", i);
+		
+		target->add_busy(1);
+
+		target->receive_wound("qi", lvl, me);
+		COMBAT_D->report_status(target,1);
+
+		COMBAT_D->do_attack(me, target, me->query_temp("weapon"), random(3)?3:1);       
+      
+//   target->start_busy(3);
+target->delete_temp("must_be_hit",1);
+		me->delete_temp("dgjs");
+		me->add_temp("apply/sword", -i);
+        me->add_temp("apply/attack", -i);
+        me->add_temp("apply/damage", -i);
+
+	}
+//2离剑式
+	if ( me->query_skill("dugu-jiujian", 1) > 320) {
+		if( !me->query_temp("weapon")) return 1;
+
+		message_vision(HBMAG+HIC"「离剑式」，$N前后式融会贯通，更是威力大增。\n"
+					+"只见$N将手中长剑随手抛向空中，长剑剑光暴长，急若流星飞向$n，$n躲避不及被长剑刺中。\n"NOR,me,target);
+		me->set_temp("dgjs", 3);
+		me->add_temp("apply/sword", i);
+        me->add_temp("apply/attack", i);
+        me->add_temp("apply/damage", i);
+
+		COMBAT_D->do_attack(me, target, me->query_temp("weapon"), random(3)?1:3);
+		target->receive_damage("qi", lvl, me);
+		target->receive_wound("qi", lvl, me);        
+      
+		me->delete_temp("dgjs");
+		me->add_temp("apply/sword", -i);
+        me->add_temp("apply/attack", -i);
+        me->add_temp("apply/damage", -i);
+	}
+//3倒剑式
+	if ( me->query_skill("dugu-jiujian", 1) > 350) {
+		if( !me->query_temp("weapon"))return 1;
+
+		message_vision(HBBLU+HIC"「倒剑式」，$N近身抢攻，单手舞出朵朵剑花。\n"
+						+"$N突然将所有剑式倒转为施，但见$n顿时被逼得手忙脚乱，自己向$N的长剑撞将上来。\n"NOR,me,target);
+		me->set_temp("dgjs", 3);
+		me->add_temp("apply/sword", i);
+        me->add_temp("apply/attack", i);
+        me->add_temp("apply/damage", i);
+
+		COMBAT_D->do_attack(me, target, me->query_temp("weapon"), random(3)?1:3);
+		target->receive_damage("qi", lvl, me);
+		target->receive_wound("qi", lvl, me);      
+      
+		me->delete_temp("dgjs");
+		me->add_temp("apply/sword", -i);
+        me->add_temp("apply/attack", -i);
+        me->add_temp("apply/damage", -i);
+
+	}
+//4浪剑式，先天根骨>35 ???
+	if ( me->query_skill("dugu-jiujian", 1) > 370 
+		&& me->query_con() > target->query_con()
+		&& me->query("con") > 35 ) {
+		
+		if( !me->query_temp("weapon"))return 1;
+
+		message_vision(HBWHT+HIB"「浪剑式」，$N识得$n招中破绽，稳步上前将剑招递出。\n"
+						+"犹如大海狂涛，又四面向$n压去，$n只觉置身于$N的剑招的狂风暴雨之中，不知不觉已经被刺中。\n"NOR,me,target);
+		me->set_temp("dgjs", 3);
+		me->add_temp("apply/sword", i);
+        me->add_temp("apply/attack", i);
+        me->add_temp("apply/damage", i);
+
+		COMBAT_D->do_attack(me, target, me->query_temp("weapon"), random(3)?1:3);
+		target->receive_damage("qi", lvl, me);
+		target->receive_wound("qi", lvl, me);    
+		me->add_temp("apply/sword", -i);
+        me->add_temp("apply/attack", -i);
+        me->add_temp("apply/damage", -i);
+
+	}
+//5落剑式，悟性>35
+	if ( me->query_skill("dugu-jiujian", 1) > 390 
+		&& me->query_int() > target->query_int()/2 
+		&& me->query("int") > 35 )
+	{
+		if( !me->query_temp("weapon")) return 1;
+
+		message_vision(HBYEL+HIR"「落剑式」，$N剑气冲霄,剑光暴长。\n"
+							+"$N腾身而起，成头下脚上势，从空中攻向$n，$n防备不及结果被$N的刺中。\n"NOR,me,target);
+		me->set_temp("dgjs", 3);
+		me->add_temp("apply/sword", i);
+        me->add_temp("apply/attack", i);
+        me->add_temp("apply/damage", i);
+
+		COMBAT_D->do_attack(me, target, me->query_temp("weapon"), random(3)?3:1);
+		target->receive_damage("qi", lvl, me);
+		target->receive_wound("qi", lvl, me);
+		target->start_busy(3);
+		target->delete_temp("must_be_hit",1);
+		me->delete_temp("dgjs");
+		me->add_temp("apply/sword", -i);
+        me->add_temp("apply/attack", -i);
+        me->add_temp("apply/damage", -i);
+	}
+	
+//6挫剑式
+	if ( me->query_skill("dugu-jiujian", 1) > 420 
+		&& me->query_dex() > target->query_dex()
+		&& me->query("dex") > 37 ) {
+		if( !me->query_temp("weapon")) return 1;
+
+		message_vision(HBCYN+HIY"「挫剑式」，$N身法陡然加快，剑尖颤动。\n"
+			+"$n与$N互相一搓身，只见$N将长剑轻轻一带，$n的小腹已中了$N的一剑。\n"NOR,me,target);
+		me->set_temp("dgjs", 3);
+		me->add_temp("apply/sword", i);
+        me->add_temp("apply/attack", i);
+        me->add_temp("apply/damage", i);
+		target->start_busy(3);
+
+		COMBAT_D->do_attack(me, target, me->query_temp("weapon"), random(3)?1:3);
+		//target->receive_damage("qi", lvl, me);
+		//target->receive_wound("qi", lvl, me);
+        
+		me->delete_temp("dgjs");
+		me->add_temp("apply/sword", -i);
+        me->add_temp("apply/attack", -i);
+        me->add_temp("apply/damage", -i);
+	}
+//7摇剑式
+
+	if ( me->query_skill("dugu-jiujian", 1) > 450 
+		&& me->query_str() > target->query_str() 
+		&& me->query("str") > 40 ) {
+		if( !me->query_temp("weapon"))return 1;
+
+		message_vision(HBGRN+HIR"「摇剑式」，$N口中大喝：“滚滚滚滚滚！”一片剑光滚滚而出。\n"
+					+"只见$N的长剑有如灵蛇一般左右迂回着，$n不知剑要攻向自己的什么位置，站在原地发呆，结果被刺中。\n"NOR,me,target);
+		me->set_temp("dgjs", 3);
+		me->add_temp("apply/sword", i);
+        me->add_temp("apply/attack", i);
+        me->add_temp("apply/damage", i);
+
+		COMBAT_D->do_attack(me, target, me->query_temp("weapon"), random(3)?1:3);
+		target->receive_damage("qi", lvl, me);
+		target->receive_wound("qi", lvl, me);
+
+		me->delete_temp("dgjs");
+		me->add_temp("apply/sword", -i);
+        me->add_temp("apply/attack", -i);
+        me->add_temp("apply/damage", -i);
+
+	}
+//8 三招连发
+	if ( me->query_skill("dugu-jiujian", 1) > 500 
+		&& me->query_str() > target->query_str() 
+		&& me->query("int") >= 40 
+		&& me->query("str") >= 40 
+		&& me->query("dex") >= 40 
+		&& me->query("con") >= 40 ) 
+	{
+		
+if( !me->query_temp("weapon"))return 1;
+		if(!userp(me)) return 1;
+		
+message_vision(HBWHT+HIR"$N口中轻赞：“不错，能接我几招已是难能可贵，最后三式，小心了！”\n"
+			+"只见「落剑式」「逆剑式」「剑气式」三式齐出，奔$n而来。\n"
+			+"这俾睨天下的武学，此刻自$N手中一气呵成，试问当今武林，还有谁能与之争雄？\n"NOR,me,target);
+		me->set_temp("dgjs", 3);
+		me->add_temp("apply/sword", i);
+        me->add_temp("apply/attack", i);
+        me->add_temp("apply/damage", i);
+		target->start_busy(3);
+		target->set_temp("must_be_hit",1);
+		COMBAT_D->report_status(target,1);
+
+		COMBAT_D->do_attack(me, target, me->query_temp("weapon"), random(3)?1:3);
+		target->receive_damage("qi", lvl, me);
+		target->receive_wound("qi", lvl, me);
+        
+      
+		target->start_busy(3);
+		target->delete_temp("must_be_hit",1);
+		me->delete_temp("dgjs");
+		me->add_temp("apply/sword", -i);
+        me->add_temp("apply/attack", -i);
+        me->add_temp("apply/damage", -i);
+	} /**/        
+	me->add_temp("apply/damage", -i);
+	me->add_temp("apply/attack", -i);
+	me->delete_temp("dgjs");
+	me->start_busy(3);
+
+	target->start_busy(1);
+    return 1;
+}
+
+string perform_name(){ return HBRED+HIY"独孤九式"NOR; }
+
+int help(object me)
+{
+        write(HIG"\n独孤九剑之「独孤九式」："NOR"\n\n");
+        write(@HELP
+	独孤九剑，有进无退！招招都是进攻，攻敌之不得不守。
+	虽只一剑一式，却是变化无穷，学到后来，前后式融会
+	贯通，更是威力大增，剑法的精要所在：「料敌机先」。
+	该招式采用金庸先生早期版本的设计，以剑招来突出剑
+	法威力，实则落入下乘，其威力远不如后期版本的无招
+	胜有招的威力。
+	
+	指令：perform sword.jiushi
+
+要求：
+	当前内力 1500  以上；
+	最大内力 15000 以上；
+	当前精力 1000  以上；
+	独孤九剑 300   以上；
+	基本剑法 300   以上；
+	基本内功 300   以上；
+	激发剑法为独孤九剑；
+	激发招架为独孤九剑；
+	后续招式对先天属性要求极为严格；
+	若先天属性皆达到40以上，自可俾睨天下；
+HELP 
+        );
+        return 1;
+}
